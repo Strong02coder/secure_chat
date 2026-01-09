@@ -16,7 +16,7 @@ const Page = () => {
   const roomId = params.roomId as string;
 
   const [copyStatus, setCopyStatus] = useState("Copy");
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(200); // 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(50); // 30 minutes in seconds
 
   const copyLink = () => {
     const url = window.location.href;
@@ -27,7 +27,7 @@ const Page = () => {
 
   return (
     <main className="flex flex-col h-screen max-h-screen overflow-hidden">
-      <header className="border-b border-zinc-800 p-4 flex items-center jsutify-between bg-zinc-900/30">
+      <header className="border-b border-zinc-800 p-4 flex items-center justify-between bg-zinc-900/30">
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
             <span className="text-xs text-zinc-500 uppercase">Room_ID</span>
@@ -61,6 +61,11 @@ const Page = () => {
             </span>
           </div>
         </div>
+
+        <button className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50">
+          <span className="group-hover:animate-pulse">💣</span>
+          DESTROY_NOW
+        </button>
       </header>
     </main>
   );
