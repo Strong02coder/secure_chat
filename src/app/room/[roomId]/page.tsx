@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function formatTimeRemaining(seconds: number) {
   const mins = Math.floor(seconds / 60);
@@ -15,8 +15,11 @@ const Page = () => {
   const params = useParams();
   const roomId = params.roomId as string;
 
+  const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [copyStatus, setCopyStatus] = useState("Copy");
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(50); // 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(100); // 30 minutes in seconds
 
   const copyLink = () => {
     const url = window.location.href;
@@ -79,12 +82,22 @@ const Page = () => {
             <input
               autoFocus
               type="text"
+              value={input}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // Todo: send message
+                  inputRef.current?.focus();
+                }
+              }}
+              ref={inputRef}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
               className="w-full bg-black border border-zinc-800 focus:border-zinc-700 focus:outline-none transition-colors text-zinc-100 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm rounded-md"
             />
           </div>
 
           <button className="bg-zinc-800 text-zinc-400 px-6 text-sm font-bold hover:text-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer rounded-md py-3">
-            SEND
+            {"<"}SEND{"/>"}
           </button>
         </div>
       </div>
