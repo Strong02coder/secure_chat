@@ -76,7 +76,7 @@ export const useUsername = () => {
 
   useEffect(() => {
     const main = () => {
-      const storedUsername = localStorage.getItem(STORAGE_KEYS);
+      const storedUsername = sessionStorage.getItem(STORAGE_KEYS);
 
       if (storedUsername) {
         setUsername(storedUsername);
@@ -84,7 +84,7 @@ export const useUsername = () => {
       }
 
       const generated = generateUsername();
-      localStorage.setItem(STORAGE_KEYS, generated);
+      sessionStorage.setItem(STORAGE_KEYS, generated);
       setUsername(generated);
     };
     main();
