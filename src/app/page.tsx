@@ -3,7 +3,7 @@ import { useUsername } from "@/hooks/use-username";
 import { client } from "@/lib/client";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 
 export default function Page() {
   return (
@@ -16,10 +16,32 @@ export default function Page() {
 function Home() {
   const { username } = useUsername();
   const router = useRouter();
+  const isInitialMount = useRef(true);
 
   const searchParams = useSearchParams();
   const wasDestroyed = searchParams.get("destroyed") === "true";
   const error = searchParams.get("error");
+
+  // Clear query parameters only on page reload, not on first visit
+  useEffect(() => {
+    if (wasDestroyed || error) {
+      const hasSeenBefore = sessionStorage.getItem("notificationShown");
+
+      if (hasSeenBefore === "true" && isInitialMount.current) {
+        // User reloaded the page with query params still there
+        router.replace("/");
+        sessionStorage.removeItem("notificationShown");
+      } else if (isInitialMount.current) {
+        // First time seeing this notification
+        sessionStorage.setItem("notificationShown", "true");
+      }
+
+      isInitialMount.current = false;
+    } else {
+      // Clean URL, remove the flag
+      sessionStorage.removeItem("notificationShown");
+    }
+  }, [wasDestroyed, error, router]);
 
   const { mutate: createRoom, isPending } = useMutation({
     mutationFn: async () => {
